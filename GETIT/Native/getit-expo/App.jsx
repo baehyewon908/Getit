@@ -1,99 +1,106 @@
 // App.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  TextInput,
   View,
+  Text,
   Button,
+  StyleSheet,
 } from 'react-native';
-import TodoInput from './components/TodoInput';
-import TodoList from './components/TodoList';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function App() {
-  const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState('all'); // all | done | todo
-  const [searchTerm, setSearchTerm] = useState('');
+// 이미 components 폴더에 있는 컴포넌트들
+import RandomWord from './components/RandomWord';
+import Timer from './components/Timer';
 
-  const addTask = text => {
-    setTasks(prev => [
-      { id: Date.now().toString(), text, done: false },
-      ...prev,
-    ]);
-  };
+const Stack = createNativeStackNavigator();
 
-  const removeTask = id => {
-    setTasks(prev => prev.filter(item => item.id !== id));
-  };
-
-  const toggleTask = id => {
-    setTasks(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, done: !item.done } : item,
-      ),
-    );
-  };
-
-
-  const toggleFilter = () => {
-    setFilter(prev =>
-      prev === 'all' ? 'done' : prev === 'done' ? 'todo' : 'all',
-    );
-  };
-
-  const getFilterLabel = () => {
-    if (filter === 'all') return '전체 보기';
-    if (filter === 'done') return '완료된 항목 보기';
-    return '미완료만 보기';
-  };
-
-
-  const visibleTasks = tasks
-    .filter(item => {
-      if (filter === 'done') return item.done;
-      if (filter === 'todo') return !item.done;
-      return true; // all
-    })
-    .filter(item => {
-      const term = searchTerm.toLowerCase();
-      return item.text.toLowerCase().includes(term);
-    });
-
+/** 🏠 홈 화면 */
+function HomeScreen({ navigation }) {
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.searchFilterContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="검색어를 입력하세요"
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-        />
-        <Button title={getFilterLabel()} onPress={toggleFilter} />
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.title}>📱 네비게이션 실습 홈</Text>
 
-      <TodoInput onAdd={addTask} />
-      <TodoList data={visibleTasks} onRemove={removeTask} onToggle={toggleTask} />
-    </SafeAreaView>
+      <Button
+        title="랜덤 명언 보러가기"
+        onPress={() => {
+          console.log('랜덤 명언 버튼 눌림');
+          navigation.navigate('RandomWord');
+        }}
+      />
+
+      <View style={{ height: 16 }} />
+
+      <Button
+        title="타이머 / 스톱워치 보러가기"
+        onPress={() => {
+          console.log('타이머 버튼 눌림');
+          navigation.navigate('Timer');
+        }}
+      />
+    </View>
+  );
+}
+
+/** 🃏 RandomWord 화면 */
+function RandomWordScreen() {
+  return (
+    <View style={styles.screen}>
+      <RandomWord />
+    </View>
+  );
+}
+
+/** ⏱ Timer/Stopwatch 화면 */
+function TimerScreen() {
+  return (
+    <View style={styles.screen}>
+      <Timer />
+    </View>
+  );
+}
+
+/** 전체 네비게이션 설정 */
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: '홈' }}
+        />
+        <Stack.Screen
+          name="RandomWord"
+          component={RandomWordScreen}
+          options={{ title: '랜덤 명언' }}
+        />
+        <Stack.Screen
+          name="Timer"
+          component={TimerScreen}
+          options={{ title: '타이머 / 스톱워치' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f0f0f0',
+    paddingTop: 80,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    gap: 16,
   },
-  searchFilterContainer: {
-    flexDirection: 'row',
-    marginBottom: 12,
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 20,
   },
-  searchInput: {
+  screen: {
     flex: 1,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginRight: 8,
-    borderRadius: 4,
-    backgroundColor: 'white',
+    padding: 20,
+    justifyContent: 'center',
   },
 });
