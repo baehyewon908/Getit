@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
 export default function Stopwatch() {
+  
   const [time, setTime] = useState(0);      
   const [running, setRunning] = useState(false);
   const timerIdRef = useRef(null);          

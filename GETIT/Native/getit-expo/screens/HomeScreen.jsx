@@ -1,6 +1,8 @@
 // screens/HomeScreen.jsx
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import StyledCard from '../components/StyledCard';
+import NativeWindCard from '../components/NativeWindCard';
 
 const DATA = [
 	{ id: '1', title: '사과' },
@@ -9,27 +11,18 @@ const DATA = [
 ];
 
 export default function HomeScreen({ navigation }) {
-	return (
-		<View style={{ flex: 1, paddingTop: 60 }}>
-			{/* 3-1. 단순 화면 전환 버튼 */}
-			<View style={{ alignItems: 'center', marginBottom: 12 }}>
-				<Text style={{ marginBottom: 8 }}>홈 화면</Text>
-			</View>
-
-			{/* 3-2. 리스트 → 상세로 데이터 전달 */}
-			<FlatList
-				data={DATA}
-				renderItem={({ item }) => (
-					<TouchableOpacity
-						onPress={() => navigation.navigate('Detail', { item })}
-					>
-						<Text style={{ padding: 20, fontSize: 18 }}>
-							• {item.title}
-						</Text>
-					</TouchableOpacity>
-				)}
-				keyExtractor={(item) => item.id}
-			/>
-		</View>
-	);
+  return (
+    <View style={{ flex: 1, paddingTop: 60 }}>
+      <StyledCard
+        title="스타일 카드"
+        content="스타일 카드 내용"
+        cardStyle={{ backgroundColor: '#900' }}
+      />
+	  <NativeWindCard
+	  	title={'네이티브 카드'}
+		content={'네이티브 카드 내용'}
+	/>
+    </View>
+  );
 }
+
